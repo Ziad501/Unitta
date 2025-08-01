@@ -1,0 +1,73 @@
+﻿using Microsoft.AspNetCore.Identity;
+using Unitta.Application.Interfaces;
+using Unitta.Domain.Entities;
+using Unitta.Infrastructure.Identity;
+
+
+namespace Unitta.Infrastructure.Services;
+
+public class IdentityUserService : IUserService
+{
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+
+    public IdentityUserService(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager)
+    {
+        _userManager = userManager;
+        _signInManager = signInManager;
+    }
+
+    public async Task<User?> GetUserByIdAsync(string userId)
+    {
+        var identityUser = await _userManager.FindByIdAsync(userId);
+        return identityUser == null ? null : MapToDomainUser(identityUser);
+    }
+
+    public async Task<User?> GetUserByEmailAsync(string email)
+    {
+        var identityUser = await _userManager.FindByEmailAsync(email);
+        return identityUser == null ? null : MapToDomainUser(identityUser);
+    }
+
+    public async Task<bool> CreateUserAsync(string email, string name, string password)
+    {
+        var user = new ApplicationUser
+        {
+            UserName = email,
+            Email = email,
+            Name = name,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        var result = await _userManager.CreateAsync(user, password);
+        return result.Succeeded;
+    }
+
+    public async Task<bool> ValidateUserAsync(string email, string password)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null) return false;
+
+        var result = await _signInManager.CheckPasswordSignInAsync(user, password, false);
+        return result.Succeeded;
+    }
+
+    public async Task<string?> GetUserIdByEmailAsync(string email)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        return user?.Id;
+    }
+
+    private static User MapToDomainUser(ApplicationUser identityUser)
+    {
+        return new User
+        {
+            Id = identityUser.Id,
+            Name = identityUser.Name,
+            Email = identityUser.Email ?? string.Empty,
+            CreatedAt = identityUser.CreatedAt
+        };
+    }
+}
