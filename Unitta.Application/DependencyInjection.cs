@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Unitta.Application.Services;
+using Unitta.Application.Validators;
 
 namespace Unitta.Application;
 
@@ -8,7 +9,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(typeof(BookingService).Assembly);
+        services.AddValidatorsFromAssembly(typeof(UnitCreateDtoValidator).Assembly);
         services.AddScoped<BookingService>();
         return services;
     }

@@ -5,19 +5,13 @@ using Unitta.Infrastructure.Persistence;
 
 namespace Unitta.Infrastructure.Repositories;
 
-public class FeatureRepository : IFeatureRepository
+public class FeatureRepository(ApplicationDbContext _context) : IFeatureRepository
 {
-    private readonly ApplicationDbContext _context;
-
-    public FeatureRepository(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<Feature?> GetByIdAsync(int id)
     {
         return await _context.Features
             .Include(f => f.Unit)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(f => f.Id == id);
     }
 
@@ -26,6 +20,7 @@ public class FeatureRepository : IFeatureRepository
         return await _context.Features
             .Include(f => f.Unit)
             .OrderBy(f => f.Name)
+            .AsSplitQuery()
             .ToListAsync();
     }
 
@@ -34,6 +29,7 @@ public class FeatureRepository : IFeatureRepository
         return await _context.Features
             .Where(f => f.UnitId == unitId)
             .OrderBy(f => f.Name)
+            .AsSplitQuery()
             .ToListAsync();
     }
 

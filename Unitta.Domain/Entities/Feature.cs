@@ -1,8 +1,7 @@
 ﻿namespace Unitta.Domain.Entities;
 
-public class Feature
+public class Feature : BaseEntity
 {
-    public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public int UnitId { get; set; }

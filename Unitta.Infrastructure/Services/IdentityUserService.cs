@@ -6,19 +6,10 @@ using Unitta.Infrastructure.Identity;
 
 namespace Unitta.Infrastructure.Services;
 
-public class IdentityUserService : IUserService
+public class IdentityUserService(
+    UserManager<ApplicationUser> _userManager,
+    SignInManager<ApplicationUser> _signInManager) : IUserService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly SignInManager<ApplicationUser> _signInManager;
-
-    public IdentityUserService(
-        UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager)
-    {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
-
     public async Task<User?> GetUserByIdAsync(string userId)
     {
         var identityUser = await _userManager.FindByIdAsync(userId);

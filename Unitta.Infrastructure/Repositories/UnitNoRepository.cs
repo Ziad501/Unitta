@@ -5,15 +5,8 @@ using Unitta.Infrastructure.Persistence;
 
 namespace Unitta.Infrastructure.Repositories;
 
-public class UnitNoRepository : IUnitNoRepository
+public class UnitNoRepository(ApplicationDbContext _context) : IUnitNoRepository
 {
-    private readonly ApplicationDbContext _context;
-
-    public UnitNoRepository(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<UnitNo?> GetByUnitNumberAsync(int unitNumber)
     {
         return await _context.UnitNumbers
@@ -26,6 +19,7 @@ public class UnitNoRepository : IUnitNoRepository
         return await _context.UnitNumbers
             .Include(un => un.Unit)
             .OrderBy(un => un.UnitNumber)
+            .AsSplitQuery()
             .ToListAsync();
     }
 
@@ -34,6 +28,7 @@ public class UnitNoRepository : IUnitNoRepository
         return await _context.UnitNumbers
             .Where(un => un.UnitId == unitId)
             .OrderBy(un => un.UnitNumber)
+            .AsSplitQuery()
             .ToListAsync();
     }
 

@@ -19,6 +19,7 @@ public class UnitRepository : IUnitRepository
         return await _context.Units
             .Include(u => u.Features)
             .Include(u => u.UnitNumbers)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(u => u.Id == id);
     }
 
@@ -27,7 +28,8 @@ public class UnitRepository : IUnitRepository
         return await _context.Units
             .Include(u => u.Features)
             .Include(u => u.UnitNumbers)
-            .OrderBy(u => u.Name)
+            .OrderBy(u => u.Id)
+            .AsSplitQuery()
             .ToListAsync();
     }
 
@@ -44,6 +46,7 @@ public class UnitRepository : IUnitRepository
             .Include(u => u.UnitNumbers)
             .Where(u => !bookedUnitIds.Contains(u.Id))
             .OrderBy(u => u.Name)
+            .AsSplitQuery()
             .ToListAsync();
     }
 

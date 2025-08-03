@@ -5,19 +5,13 @@ using Unitta.Infrastructure.Persistence;
 
 namespace Unitta.Infrastructure.Repositories;
 
-public class BookingRepository : IBookingRepository
+public class BookingRepository(ApplicationDbContext _context) : IBookingRepository
 {
-    private readonly ApplicationDbContext _context;
-
-    public BookingRepository(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task<Booking?> GetByIdAsync(int id)
     {
         return await _context.Bookings
             .Include(b => b.Unit)
+            .AsSplitQuery()
             .FirstOrDefaultAsync(b => b.Id == id);
     }
 
@@ -26,6 +20,7 @@ public class BookingRepository : IBookingRepository
         return await _context.Bookings
             .Include(b => b.Unit)
             .OrderByDescending(b => b.BookingDate)
+            .AsSplitQuery()
             .ToListAsync();
     }
 
@@ -35,6 +30,7 @@ public class BookingRepository : IBookingRepository
             .Include(b => b.Unit)
             .Where(b => b.UserId == userId)
             .OrderByDescending(b => b.BookingDate)
+            .AsSplitQuery()
             .ToListAsync();
     }
 
@@ -43,6 +39,7 @@ public class BookingRepository : IBookingRepository
         return await _context.Bookings
             .Where(b => b.UnitId == unitId)
             .OrderByDescending(b => b.BookingDate)
+            .AsSplitQuery()
             .ToListAsync();
     }
 
@@ -52,6 +49,7 @@ public class BookingRepository : IBookingRepository
             .Include(b => b.Unit)
             .Where(b => b.CheckInDate <= endDate && b.CheckOutDate >= startDate)
             .OrderBy(b => b.CheckInDate)
+            .AsSplitQuery()
             .ToListAsync();
     }
 
