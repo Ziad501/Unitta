@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Unitta.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitDbConstruction : Migration
+    public partial class fixDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -188,7 +189,7 @@ namespace Unitta.Infrastructure.Migrations
                     UnitId = table.Column<int>(type: "integer", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false),
-                    Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    Phone = table.Column<string>(type: "character varying(30)", maxLength: 30, nullable: true),
                     TotalCost = table.Column<double>(type: "double precision", precision: 10, scale: 2, nullable: false),
                     Nights = table.Column<int>(type: "integer", nullable: false),
                     Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
@@ -245,19 +246,21 @@ namespace Unitta.Infrastructure.Migrations
                 name: "UnitNumbers",
                 columns: table => new
                 {
-                    UnitNumber = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityAlwaysColumn),
+                    UnitNumber = table.Column<int>(type: "integer", maxLength: 20, nullable: false),
                     UnitId = table.Column<int>(type: "integer", nullable: false),
                     SpecialDetails = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UnitNumbers", x => x.UnitNumber);
+                    table.PrimaryKey("PK_UnitNumbers", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UnitNumbers_Units_UnitId",
                         column: x => x.UnitId,
                         principalTable: "Units",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateIndex(
@@ -320,12 +323,13 @@ namespace Unitta.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_UnitNumbers_UnitId",
                 table: "UnitNumbers",
-                column: "UnitId");
+                column: "UnitId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UnitNumbers_UnitId_UnitNumber",
+                name: "IX_UnitNumbers_UnitNumber",
                 table: "UnitNumbers",
-                columns: new[] { "UnitId", "UnitNumber" },
+                column: "UnitNumber",
                 unique: true);
         }
 

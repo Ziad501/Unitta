@@ -1,6 +1,6 @@
-﻿@model IEnumerable<UnitDto>
+﻿@model IEnumerable<UnitNoDto>
 @{
-    ViewData["Title"] = "Units";
+    ViewData["Title"] = "Unit Numbers";
 }
 
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -36,17 +36,16 @@
     <div class="card-body border p-4">
         <div class="row pb-3">
             <div class="col-6 offset-6 text-end">
-                <a class="btn btn-secondary" asp-controller="Unit" asp-action="Create"><i class="bi bi-plus-circle"></i> Create New Unit</a>
+                <a class="btn btn-secondary" asp-controller="UnitNo" asp-action="Create"><i class="bi bi-plus-circle"></i> Create New Unit Number</a>
             </div>
         </div>
         <div class="card-body border p-4">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Square Feet</th>
+                        <th>Unit Number</th>
+                        <th>Unit Id</th>
+                        <th>Special Details</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -54,16 +53,15 @@
                     @foreach (var unit in Model)
                     {
                         <tr>
-                            <td>@unit.Id</td>
-                            <td>@unit.Name</td>
-                            <td>@unit.Price</td>
-                            <td>@unit.Sqft</td>
+                            <td>@unit.UnitNumber</td>
+                            <td>@unit.UnitId</td>
+                            <td>@unit.SpecialDetails</td>
                             <td>
                                 <div class="w-100 btn-group" role="group">
-                                    <a class="btn btn-primary mx-2" asp-controller="Unit" asp-action="Edit" asp-route-id="@unit.Id"><i class="bi bi-pencil-square"></i> Edit</a>
+                                    <a class="btn btn-primary mx-2" asp-controller="UnitNo" asp-action="Edit" asp-route-id="@unit.UnitNumber"><i class="bi bi-pencil-square"></i> Edit</a>
 
                                     <button type="button" class="btn btn-danger mx-2" data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal" data-unit-id="@unit.Id">
+                                            data-bs-target="#deleteModal" data-unit-id="@unit.UnitNumber">
                                         <i class="bi bi-trash"></i> Delete
                                     </button>
                                 </div>

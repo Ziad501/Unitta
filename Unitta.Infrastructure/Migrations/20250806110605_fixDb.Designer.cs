@@ -12,8 +12,8 @@ using Unitta.Infrastructure.Persistence;
 namespace Unitta.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250731134716_InitDbConstruction")]
-    partial class InitDbConstruction
+    [Migration("20250806110605_fixDb")]
+    partial class fixDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -202,8 +202,8 @@ namespace Unitta.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Phone")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
 
                     b.Property<string>("Status")
                         .HasMaxLength(50)
@@ -314,8 +314,11 @@ namespace Unitta.Infrastructure.Migrations
 
             modelBuilder.Entity("Unitta.Domain.Entities.UnitNo", b =>
                 {
-                    b.Property<int>("UnitNumber")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
 
                     b.Property<string>("SpecialDetails")
                         .HasMaxLength(500)
@@ -324,11 +327,16 @@ namespace Unitta.Infrastructure.Migrations
                     b.Property<int>("UnitId")
                         .HasColumnType("integer");
 
-                    b.HasKey("UnitNumber");
+                    b.Property<int>("UnitNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("integer");
 
-                    b.HasIndex("UnitId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("UnitId", "UnitNumber")
+                    b.HasIndex("UnitId")
+                        .IsUnique();
+
+                    b.HasIndex("UnitNumber")
                         .IsUnique();
 
                     b.ToTable("UnitNumbers", (string)null);
@@ -488,9 +496,9 @@ namespace Unitta.Infrastructure.Migrations
             modelBuilder.Entity("Unitta.Domain.Entities.UnitNo", b =>
                 {
                     b.HasOne("Unitta.Domain.Entities.Unit", "Unit")
-                        .WithMany("UnitNumbers")
-                        .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithOne("UnitNo")
+                        .HasForeignKey("Unitta.Domain.Entities.UnitNo", "UnitId")
+                        .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
                     b.Navigation("Unit");
@@ -502,7 +510,7 @@ namespace Unitta.Infrastructure.Migrations
 
                     b.Navigation("Features");
 
-                    b.Navigation("UnitNumbers");
+                    b.Navigation("UnitNo");
                 });
 #pragma warning restore 612, 618
         }

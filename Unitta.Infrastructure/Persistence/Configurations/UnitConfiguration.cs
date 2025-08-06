@@ -47,10 +47,11 @@ public class UnitConfiguration : IEntityTypeConfiguration<Unit>
             .HasForeignKey(f => f.UnitId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasMany(u => u.UnitNumbers)
+        // One-to-one with UnitNo (Unit side - principal)
+        builder.HasOne(u => u.UnitNo)
             .WithOne(un => un.Unit)
-            .HasForeignKey(un => un.UnitId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey<UnitNo>(un => un.UnitId)
+            .OnDelete(DeleteBehavior.SetNull); // When unit is deleted, set UnitId to null (unassign the number)
 
         builder.HasMany(u => u.Bookings)
             .WithOne(b => b.Unit)

@@ -1,4 +1,5 @@
-﻿using Unitta.Domain.Entities;
+﻿using System.Linq.Expressions;
+using Unitta.Domain.Entities;
 
 namespace Unitta.Application.Interfaces;
 
@@ -10,4 +11,6 @@ public interface IUnitNoRepository
     Task<bool> CreateAsync(UnitNo unitNo);
     Task<bool> UpdateAsync(UnitNo unitNo);
     Task<bool> DeleteAsync(int unitNumber);
+    Task<bool> AnyAsync(Expression<Func<UnitNo, bool>> predicate);
+
 }

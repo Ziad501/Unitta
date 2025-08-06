@@ -11,7 +11,7 @@ public class Unit : BaseEntity
     public DateTime? CreatedDate { get; set; }
     public DateTime? UpdatedDate { get; set; }
 
-    public virtual ICollection<Feature> Features { get; set; } = new List<Feature>();
-    public virtual ICollection<UnitNo> UnitNumbers { get; set; } = new List<UnitNo>();
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+    public virtual ICollection<Feature> Features { get; set; } = new HashSet<Feature>();
+    public virtual UnitNo? UnitNo { get; set; }
+    public virtual ICollection<Booking> Bookings { get; set; } = new HashSet<Booking>();
 }

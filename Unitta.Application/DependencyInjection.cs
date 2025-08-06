@@ -9,7 +9,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(typeof(UnitCreateDtoValidator).Assembly);
+        services.AddValidatorsFromAssemblyContaining<UnitNoCreateDtoValidator>();
+
         services.AddScoped<BookingService>();
         return services;
     }

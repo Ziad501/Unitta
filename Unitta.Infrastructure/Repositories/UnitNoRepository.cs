@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using Unitta.Application.Interfaces;
 using Unitta.Domain.Entities;
 using Unitta.Infrastructure.Persistence;
@@ -75,5 +76,9 @@ public class UnitNoRepository(ApplicationDbContext _context) : IUnitNoRepository
         {
             return false;
         }
+    }
+    public async Task<bool> AnyAsync(Expression<Func<UnitNo, bool>> predicate)
+    {
+        return await _context.UnitNumbers.AnyAsync(predicate);
     }
 }

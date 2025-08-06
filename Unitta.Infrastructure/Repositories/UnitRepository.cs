@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using Unitta.Application.Interfaces;
 using Unitta.Domain.Entities;
 using Unitta.Infrastructure.Persistence;
@@ -18,7 +19,7 @@ public class UnitRepository : IUnitRepository
     {
         return await _context.Units
             .Include(u => u.Features)
-            .Include(u => u.UnitNumbers)
+            .Include(u => u.UnitNo)
             .AsSplitQuery()
             .FirstOrDefaultAsync(u => u.Id == id);
     }
@@ -27,7 +28,7 @@ public class UnitRepository : IUnitRepository
     {
         return await _context.Units
             .Include(u => u.Features)
-            .Include(u => u.UnitNumbers)
+            .Include(u => u.UnitNo)
             .OrderBy(u => u.Id)
             .AsSplitQuery()
             .ToListAsync();
@@ -43,7 +44,7 @@ public class UnitRepository : IUnitRepository
 
         return await _context.Units
             .Include(u => u.Features)
-            .Include(u => u.UnitNumbers)
+            .Include(u => u.UnitNo)
             .Where(u => !bookedUnitIds.Contains(u.Id))
             .OrderBy(u => u.Name)
             .AsSplitQuery()
@@ -100,5 +101,16 @@ public class UnitRepository : IUnitRepository
     public async Task<bool> ExistsAsync(int id)
     {
         return await _context.Units.AnyAsync(u => u.Id == id);
+    }
+
+    public async Task<IEnumerable<Unit>> GetAllAsync(Expression<Func<Unit, bool>> predicate)
+    {
+        return await _context.Units
+            .Include(u => u.Features)
+            .Include(u => u.UnitNo)
+            .OrderBy(u => u.Id)
+            .Where(predicate)
+            .AsSplitQuery()
+            .ToListAsync();
     }
 }

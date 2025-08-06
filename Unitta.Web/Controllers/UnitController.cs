@@ -28,11 +28,12 @@ public class UnitController(IUnitRepository _unit, ILogger<UnitController> _logg
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Create validation failed for unit with name: {UnitName}", unitDto.Name);
+            TempData["ErrorMessage"] = "Please correct the errors in the form.";
             return View(unitDto);
         }
         var newUnit = unitDto.ToUnit();
-
         await _unit.CreateAsync(newUnit);
+        TempData["SuccessMessage"] = $"Unit '{newUnit.Name}' created successfully.";
         _logger.LogInformation("Unit '{UnitName}' created successfully.", newUnit.Name);
         return RedirectToAction(nameof(Index));
     }
@@ -44,6 +45,7 @@ public class UnitController(IUnitRepository _unit, ILogger<UnitController> _logg
         if (unit == null)
         {
             _logger.LogWarning("Unit with ID {UnitId} NOT FOUND for editing.", id);
+            TempData["ErrorMessage"] = $"Unit with ID {id} not found.";
             return RedirectToAction("Error", "Home");
         }
         var unitDto = unit.ToUnitUpdateDto();
@@ -56,18 +58,23 @@ public class UnitController(IUnitRepository _unit, ILogger<UnitController> _logg
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Update validation failed for unit with ID {UnitId}.", dto.Id);
+
             return View(dto);
         }
 
         var unitToUpdate = await _unit.GetByIdAsync(dto.Id);
+
         if (unitToUpdate == null)
         {
             _logger.LogWarning("Unit with ID {UnitId} NOT FOUND during update attempt.", dto.Id);
+            TempData["ErrorMessage"] = $"Unit with ID {dto.Id} not found.";
             return RedirectToAction("Error", "Home");
         }
+
         UnitMapper.UpdateUnitFromDto(dto, unitToUpdate); //(maps the DTO onto the existing entity)
         unitToUpdate.UpdatedDate = DateTime.UtcNow;
         await _unit.UpdateAsync(unitToUpdate);
+        TempData["SuccessMessage"] = $"Unit '{unitToUpdate.Name}' updated successfully.";
         _logger.LogInformation("Unit with ID {UnitId} updated successfully.", dto.Id);
         return RedirectToAction(nameof(Index));
     }
@@ -78,9 +85,11 @@ public class UnitController(IUnitRepository _unit, ILogger<UnitController> _logg
         if (!await _unit.ExistsAsync(id))
         {
             _logger.LogWarning("Unit with ID {UnitId} NOT FOUND for deletion.", id);
+            TempData["ErrorMessage"] = $"Unit with ID {id} not found.";
             return RedirectToAction("Error", "Home");
         }
         await _unit.DeleteAsync(id);
+        TempData["SuccessMessage"] = $"Unit with ID {id} deleted successfully.";
         _logger.LogInformation("Unit with ID {UnitId} deleted successfully.", id);
         return RedirectToAction(nameof(Index));
     }
