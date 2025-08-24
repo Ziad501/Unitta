@@ -1,0 +1,56 @@
+﻿@if (TempData["SuccessMessage"] != null)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            toastr.success('@TempData["SuccessMessage"]');
+        });
+    </script>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            toastr.error('@TempData["ErrorMessage"]');
+        });
+    </script>
+}
+
+@if (TempData["WarningMessage"] != null)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            toastr.warning('@TempData["WarningMessage"]');
+        });
+    </script>
+}
+
+@if (TempData["InfoMessage"] != null)
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            toastr.info('@TempData["InfoMessage"]');
+        });
+    </script>
+}
+
+<script type="text/javascript">
+    // Configure Toastr options
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+</script>

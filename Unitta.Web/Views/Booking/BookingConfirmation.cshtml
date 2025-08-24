@@ -1,0 +1,115 @@
+﻿@model Unitta.Application.DTOs.BookingDto
+@{
+    ViewData["Title"] = "Booking Confirmed";
+}
+
+@* Custom Styles for the Confirmation View *@
+<style>
+    .card-animated {
+        animation: zoomIn 0.6s ease-out forwards;
+    }
+
+    .animated-item {
+        opacity: 0;
+        animation: fadeInUp 0.5s ease-out forwards;
+    }
+
+    .icon-success {
+        font-size: 4rem;
+        color: var(--bs-success);
+    }
+
+    .btn-outline-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(var(--bs-primary-rgb), 0.2);
+        transition: all 0.2s ease-in-out;
+    }
+
+    @@keyframes zoomIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 85vh;">
+    <div class="col-lg-8 col-xl-7">
+        <div class="card shadow-lg border-0 card-animated text-center">
+            <div class="card-body p-4 p-md-5">
+
+                <div class="animated-item" style="animation-delay: 0.1s;">
+                    <i class="bi bi-patch-check-fill icon-success"></i>
+                </div>
+
+                <h1 class="display-5 fw-bold mt-3 animated-item" style="animation-delay: 0.2s;">Booking Confirmed!</h1>
+
+                <p class="lead text-body-secondary animated-item" style="animation-delay: 0.3s;">
+                    Thank you, @Model.Name. Your reservation is complete.
+                </p>
+
+                <p class="text-muted animated-item" style="animation-delay: 0.4s;">
+                    An email with your booking details has been sent to <strong>@Model.Email</strong>.
+                </p>
+
+                <hr class="my-4 animated-item" style="animation-delay: 0.5s;">
+
+                <div class="text-start">
+                    <h5 class="fw-light mb-3 animated-item" style="animation-delay: 0.6s;">Your Reservation Details</h5>
+
+                    @if (Model.Unit != null)
+                    {
+                        <div class="d-flex justify-content-between align-items-center mb-2 animated-item" style="animation-delay: 0.7s;">
+                            <span class="text-body-secondary"><i class="bi bi-building me-2"></i>Unit</span>
+                            <span class="fw-bold">@Model.Unit.Name</span>
+                        </div>
+                    }
+                    <div class="d-flex justify-content-between align-items-center mb-2 animated-item" style="animation-delay: 0.8s;">
+                        <span class="text-body-secondary"><i class="bi bi-calendar-check me-2"></i>Check-in</span>
+                        <span class="fw-bold">@Model.CheckInDate.ToLongDateString()</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2 animated-item" style="animation-delay: 0.9s;">
+                        <span class="text-body-secondary"><i class="bi bi-calendar-x me-2"></i>Check-out</span>
+                        <span class="fw-bold">@Model.CheckOutDate.ToLongDateString()</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-3 animated-item" style="animation-delay: 1.0s;">
+                        <span class="text-body-secondary"><i class="bi bi-cash-coin me-2"></i>Total Paid</span>
+                        <span class="fw-bold fs-5 text-success">@Model.TotalCost.ToString("C")</span>
+                    </div>
+                </div>
+
+                <hr class="my-4 animated-item" style="animation-delay: 1.1s;">
+
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center animated-item" style="animation-delay: 1.2s;">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg px-4 gap-3">
+                        <i class="bi bi-house-door-fill me-1"></i>Back to Home
+                    </a>
+                    <a asp-controller="Booking" asp-action="" class="btn btn-outline-secondary btn-lg px-4">
+                        <i class="bi bi-card-list me-1"></i>View My Booking
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_Notification" />
+}

@@ -1,0 +1,9 @@
+﻿@using Unitta.Application.Utility
+@if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_AdminView))
+{
+    Layout = "_LayoutAdmin";
+}
+else
+{
+    Layout = "_Layout";
+}

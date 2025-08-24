@@ -1,0 +1,68 @@
+﻿@model UnitUpdateDto
+@{
+    ViewData["Title"] = "Edit";
+}
+<div class="container w-50 card border-0 p-4">
+    <div class="card-header ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="py-2"> <i class="bi bi-pencil-square"></i> Update Unit</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body border p-4">
+        <form method="post" class="row" enctype="multipart/form-data">
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Name" class="form-control border shadow" />
+                <label asp-for="Name" class="ms-2">Name</label>
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Price" class="form-control border shadow" />
+                <label asp-for="Price" class="ms-2">Price</label>
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Occupancy" class="form-control border shadow" />
+                <label asp-for="Occupancy" class="ms-2">Occupancy</label>
+                <span asp-validation-for="Occupancy" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <textarea asp-for="Description" class="form-control border shadow"></textarea>
+                <label asp-for="Description" class="ms-2">Description</label>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Sqft" class="form-control border shadow" />
+                <label asp-for="Sqft" class="ms-2">Area</label>
+                <span asp-validation-for="Sqft" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <input asp-for="NewImage" type="file" class="form-control border shadow" />
+                <label asp-for="NewImage" class="ms-2">New Image</label>
+                <span asp-validation-for="NewImage" class="text-danger"></span>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.CurrentImageUrl))
+            {
+                <div class="col-12 py-2">
+                    <p>Current Image:</p>
+                    <img src="@Model.CurrentImageUrl" style="width:100px; border-radius: 5px; border: 1px solid #ddd" />
+                </div>
+            }
+            <div class="col-12 text-end py-2">
+                <button type="submit" class="btn btn-warning shadow">
+                    <i class="bi bi-check-circle"></i> Edit
+                </button>
+                <a asp-controller="Unit" asp-action="Index" class="btn btn-secondary shadow">
+                    <i class="bi bi-x-circle"></i> back
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+        <partial name="_Notification" />
+    }
+}

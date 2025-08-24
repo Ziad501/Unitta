@@ -1,0 +1,188 @@
+﻿@using Unitta.Application.Utility
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/css/bootstrap.min.css" integrity="sha512-fw7f+TcMjTb7bpbLJZlP8g2Y4XcCyFZW8uy8HsRZsH/SwbMw0plKHFHr99DN3l04VsYNwvzicUX/6qurvIxbxw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="//cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Unitta.Web.styles.css" asp-append-version="true" />
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow " style="min-height: 48px; padding-top: 0.25rem; padding-bottom: 0.25rem;">
+            <div class="container-fluid">
+                <a class="navbar-brand py-1" asp-area="" asp-controller="Home" asp-action="Index"><img src="~/images/logo.png" style="width:80px" /></a>
+
+                <button class="navbar-toggler py-1" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link py-2" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        @if (User.IsInRole(SD.Role_Admin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle py-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Management
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Unit" asp-action="Index">Units</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="UnitNo" asp-action="Index">Unit Numbers</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Features" asp-action="Index">Features</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-area="" asp-controller="Booking" asp-action="Index">Bookings</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        @if(User.IsInRole(SD.Role_Client)){
+                        <li class="nav-item">
+                            <a class="nav-link py-2" asp-area="" asp-controller="Booking" asp-action="Index">Manage Booking</a>
+                        </li>
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                    <div class="d-flex align-items-center">
+                        <button class="btn p-2 rounded-pill position-relative overflow-hidden theme-toggle-modern" id="theme-toggle-btn" type="button">
+                            <i class="bi position-relative" id="theme-icon" style="font-size: 18px; transition: all 0.3s ease; z-index: 2;"></i>
+                            <span class="position-absolute top-0 start-0 w-100 h-100 rounded-pill theme-toggle-bg"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="">
+        <main role="main">
+            <partial name="_Notification" />
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - Unitta
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.7/js/bootstrap.bundle.min.js" integrity="sha512-Tc0i+vRogmX4NN7tuLbQfBxa8JkfUSAxSFVzmU31nVdHyiHElPPy2cWfFacmCJKw0VqovrzKhdd2TSTMdAxp2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="//cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const themeIcon = document.getElementById('theme-icon');
+            const htmlElement = document.documentElement;
+            const storageKey = 'theme-preference';
+
+            const updateIcon = (theme) => {
+                if (theme === 'dark') {
+                    themeIcon.classList.remove('bi-sun-fill');
+                    themeIcon.classList.add('bi-moon-stars-fill');
+                } else {
+                    themeIcon.classList.remove('bi-moon-stars-fill');
+                    themeIcon.classList.add('bi-sun-fill');
+                }
+            };
+
+            const setTheme = (theme) => {
+                htmlElement.setAttribute('data-bs-theme', theme);
+                updateIcon(theme);
+            };
+
+            const savedTheme = localStorage.getItem(storageKey) || 'dark';
+            setTheme(savedTheme);
+
+            themeToggleBtn.addEventListener('click', function () {
+                const currentTheme = htmlElement.getAttribute('data-bs-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+                localStorage.setItem(storageKey, newTheme);
+
+                setTheme(newTheme);
+            });
+        });
+    </script>
+    <style>
+        .theme-toggle-modern {
+            width: 44px;
+            height: 44px;
+            border: 2px solid;
+            border-color: var(--bs-border-color);
+            background: transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        }
+
+            .theme-toggle-modern:hover {
+                /* transform: scale(1.05); */
+                border-color: var(--bs-primary);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            .theme-toggle-modern:active {
+                /* transform: scale(0.95);  */
+            }
+
+        .theme-toggle-bg {
+            background: linear-gradient(135deg, var(--bs-primary-rgb, 13, 110, 253), var(--bs-info-rgb, 13, 202, 240));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+
+        .theme-toggle-modern:hover .theme-toggle-bg {
+            opacity: 0.1;
+        }
+
+        [data-bs-theme="dark"] .theme-toggle-modern {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+            [data-bs-theme="dark"] .theme-toggle-modern:hover {
+                /* border-color: var(--bs-info); */
+                box-shadow: 0 8px 25px rgba(255, 255, 255, 0.1);
+            }
+
+        [data-bs-theme="dark"] .theme-toggle-bg {
+            background: linear-gradient(135deg, var(--bs-info-rgb, 13, 202, 240), var(--bs-warning-rgb, 255, 193, 7));
+        }
+
+        #theme-icon {
+            color: var(--bs-body-color);
+        }
+
+        .theme-toggle-modern:hover #theme-icon {
+            color: var(--bs-primary);
+        }
+
+        [data-bs-theme="dark"] .theme-toggle-modern:hover #theme-icon {
+            color: var(--bs-info);
+        }
+    </style>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

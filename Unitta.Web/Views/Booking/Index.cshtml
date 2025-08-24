@@ -1,0 +1,83 @@
+﻿@using Unitta.Application.Utility
+@{
+    ViewData["Title"] = "Bookings";
+}
+@{
+    var status = Context.Request.Query["status"].ToString();
+    var statusClass = status switch
+    {
+        SD.StatusPending => "btn-warning",
+        SD.StatusApproved => "btn-success",
+        SD.StatusCancelled => "btn-danger",
+        SD.StatusCheckIn => "btn-primary",
+        SD.StatusCompleted => "btn-secondary",
+        _ => "btn-outline-secondary"
+    };
+
+}
+<div class="w-100 card container d-flex justify-content-center border-0 ">
+    <div class="card-header bg-transparent border-bottom">
+        <div class="d-flex justify-content-center align-items-center">
+            <h3 class="mb-0">
+                <i class="bi bi-card-list me-2"></i>Booking List
+            </h3>
+        </div>
+    </div>
+    <div class="card-body border p-4">
+        <div class="d-flex justify-content-center ">
+            <div >
+                <a asp-controller="Booking" asp-action="Index" asp-route-status=""
+                   class="btn @(string.IsNullOrEmpty(status) ? "btn-info" : "btn-outline-info")">
+                    <i class="bi bi-card-checklist"></i> Show All
+                </a>
+
+                <a asp-controller="Booking" asp-action="Index" asp-route-status="@SD.StatusPending"
+                   class="btn @(status == SD.StatusPending ? "btn-warning" : "btn-outline-warning")">
+                    <i class="bi bi-hourglass-split"></i> @SD.StatusPending
+                </a>
+
+                <a asp-controller="Booking" asp-action="Index" asp-route-status="@SD.StatusApproved"
+                   class="btn @(status == SD.StatusApproved ? "btn-success" : "btn-outline-success")">
+                    <i class="bi bi-check-circle"></i> @SD.StatusApproved
+                </a>
+
+                <a asp-controller="Booking" asp-action="Index" asp-route-status="@SD.StatusCheckIn"
+                   class="btn @(status == SD.StatusCheckIn ? "btn-primary" : "btn-outline-primary")">
+                    <i class="bi bi-box-arrow-in-right"></i> @SD.StatusCheckIn
+                </a>
+
+                <a asp-controller="Booking" asp-action="Index" asp-route-status="@SD.StatusCompleted"
+                   class="btn @(status == SD.StatusCompleted ? "btn-secondary" : "btn-outline-secondary")">
+                    <i class="bi bi-check2-all"></i> @SD.StatusCompleted
+                </a>
+
+                <a asp-controller="Booking" asp-action="Index" asp-route-status="@SD.StatusCancelled"
+                   class="btn @(status == SD.StatusCancelled ? "btn-danger" : "btn-outline-danger")">
+                    <i class="bi bi-x-circle"></i> @SD.StatusCancelled
+                </a>
+            </div>
+        </div>
+        <table id="myTable" class="table table-striped ">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Check In Date</th>
+                    <th>Nights</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/js/booking.js" asp-append-version="true"></script>
+    <partial name="_Notification" />
+}

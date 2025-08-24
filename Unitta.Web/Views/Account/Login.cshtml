@@ -1,0 +1,472 @@
+﻿@model LoginDto
+@{
+    ViewData["Title"] = "Login";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+
+<body>
+
+    <div class="hero-section">
+        <div class="hero-overlay">
+
+            <div class="auth-container">
+                <a asp-controller="Home" asp-action="Index" class="home-link-icon" title="Back to Home">
+                    <i class="bi bi-arrow-left-circle"></i>
+                </a>
+
+                <h2 class="text-center auth-header">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                </h2>
+                <form asp-action="Login" method="post">
+                    <input asp-for="RedirectUrl" type="hidden" />
+                    <div asp-validation-summary="ModelOnly" class="text-white mb-3"></div>
+
+                    <div class="form-floating mb-3 form-item">
+                        <input asp-for="Email" class="form-control" placeholder="name@example.com" autocomplete="email" />
+                        <label asp-for="Email">Email address</label>
+                        <span asp-validation-for="Email" class="text-white"></span>
+                    </div>
+
+                    <div class="form-floating mb-3 form-item">
+                        <input asp-for="Password" type="password" class="form-control" placeholder="Password" autocomplete="current-password" />
+                        <label asp-for="Password">Password</label>
+                        <span asp-validation-for="Password" class="text-white"></span>
+                    </div>
+
+                    <div class="mb-3 form-check d-flex justify-content-between align-items-center form-item">
+                        <div class="remember-me-container">
+                            <input asp-for="RememberMe" type="checkbox" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label">Remember Me</label>
+                        </div>
+                        <a href="#" class="auth-link">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-auth w-100 py-2">
+                        <span class="btn-text">Sign In</span>
+                        <i class="bi bi-arrow-right-circle ms-2 btn-icon"></i>
+                    </button>
+
+                    <div class="text-center mt-4 footer-link">
+                        <span class="auth-link-text">Don't have an account?</span> <a asp-action="Register" asp-route-returnUrl="@Model.RedirectUrl" class="auth-link">Register here</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+
+    <style>
+        :root {
+            --theme-primary: #6366F1;
+            --theme-primary-light: #818CF8;
+            --theme-primary-rgb: 99, 102, 241;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            background-image: url('/images/login/1.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .auth-container {
+            position: relative;
+            max-width: 450px;
+            width: 100%;
+            padding: 2.5rem;
+            background: rgba(23, 23, 33, 0.6);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+            color: #fff;
+            /* Entrance Animation */
+            animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            animation-fill-mode: backwards;
+        }
+
+        /* Card entrance animation */
+        @@keyframes slideInUp {
+            0%
+
+        {
+            opacity: 0;
+            transform: translateY(60px) scale(0.95);
+            filter: blur(4px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        }
+
+        /* Floating animation for subtle movement */
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, transparent 30%, rgba(var(--theme-primary-rgb), 0.1) 50%, transparent 70%);
+            border-radius: 1rem;
+            z-index: -1;
+            opacity: 0;
+            animation: borderGlow 3s ease-in-out infinite alternate;
+        }
+
+        @@keyframes borderGlow {
+            0%
+
+        {
+            opacity: 0;
+        }
+
+        50% {
+            opacity: 0.3;
+        }
+
+        100% {
+            opacity: 0;
+        }
+
+        }
+
+        .home-link-icon {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.5rem;
+            text-decoration: none;
+            line-height: 1;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: fadeIn 1s ease 0.3s backwards;
+        }
+
+            .home-link-icon:hover {
+                color: #fff;
+                transform: scale(1.1) rotate(-5deg);
+            }
+
+        .auth-header {
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #fff;
+            animation: fadeInDown 0.8s ease 0.2s backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .auth-header i {
+                animation: bounceIn 1s ease 0.8s backwards;
+            }
+
+        /* Form items staggered animation */
+        .form-item {
+            animation: fadeInUp 0.6s ease backwards;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .form-item:nth-child(3) {
+                animation-delay: 0.1s;
+            }
+
+            .form-item:nth-child(4) {
+                animation-delay: 0.2s;
+            }
+
+            .form-item:nth-child(5) {
+                animation-delay: 0.3s;
+            }
+
+        @@keyframes fadeInUp {
+            0%
+
+        {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        @@keyframes fadeInDown {
+            0%
+
+        {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        @@keyframes fadeIn {
+            0%
+
+        {
+            opacity: 0;
+        }
+
+        100% {
+            opacity: 1;
+        }
+
+        }
+
+        @@keyframes bounceIn {
+            0%
+
+        {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        70% {
+            transform: scale(0.9);
+        }
+
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        }
+
+        .form-item:hover {
+            transform: translateY(-2px);
+        }
+
+        .form-floating > .form-control {
+            background-color: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+            .form-floating > .form-control:focus {
+                background-color: rgba(0, 0, 0, 0.4);
+                box-shadow: 0 0 0 0.25rem rgba(var(--theme-primary-rgb), 0.4);
+                border-color: rgba(var(--theme-primary-rgb), 0.6);
+                transform: translateY(-1px);
+            }
+
+        .form-floating > label {
+            color: rgba(255, 255, 255, 0.6);
+            transition: all 0.3s ease;
+        }
+
+        .form-floating:focus-within > label {
+            color: var(--theme-primary-light);
+        }
+
+        .remember-me-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .form-check-label {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color 0.3s ease;
+            margin-left: 0.5rem;
+        }
+
+        .form-check-input {
+            transition: all 0.3s ease;
+        }
+
+            .form-check-input:checked {
+                background-color: var(--theme-primary);
+                border-color: var(--theme-primary);
+                transform: scale(1.1);
+            }
+
+            .form-check-input:focus {
+                box-shadow: 0 0 0 0.25rem rgba(var(--theme-primary-rgb), 0.4);
+            }
+
+        .btn-auth {
+            background-image: linear-gradient(45deg, var(--theme-primary) 0%, var(--theme-primary-light) 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.05rem;
+            border-radius: 0.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-top: 0.8rem;
+            padding-bottom: 0.8rem;
+            position: relative;
+            overflow: hidden;
+            animation: slideInUp 0.6s ease 0.4s backwards;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .btn-auth::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+                transition: left 0.5s;
+            }
+
+            .btn-auth:hover::before {
+                left: 100%;
+            }
+
+            .btn-auth:hover {
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 8px 25px rgba(var(--theme-primary-rgb), 0.4);
+            }
+
+            .btn-auth:active {
+                transform: translateY(-1px) scale(0.98);
+            }
+
+        .btn-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .btn-auth:hover .btn-icon {
+            transform: translateX(4px);
+        }
+
+        .footer-link {
+            animation: fadeIn 1s ease 0.6s backwards;
+        }
+
+        .auth-link-text {
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
+        }
+
+        .auth-link {
+            font-weight: 500;
+            text-decoration: none;
+            color: var(--theme-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+            .auth-link::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background: linear-gradient(45deg, var(--theme-primary), var(--theme-primary-light));
+                transition: width 0.3s ease;
+            }
+
+            .auth-link:hover::after {
+                width: 100%;
+            }
+
+            .auth-link:hover {
+                filter: brightness(1.2);
+                transform: translateY(-1px);
+            }
+
+        /* Responsive animations */
+        @@media (max-width: 576px) {
+            .auth-container
+
+        {
+            animation: fadeIn 0.6s ease;
+            padding: 2rem 1.5rem;
+        }
+
+        .form-item:hover {
+            transform: none;
+        }
+
+        }
+
+        /* Accessibility - respect reduced motion preference */
+        @@media (prefers-reduced-motion: reduce) {
+            .auth-container, .home-link-icon, .auth-header, .form-item, .btn-auth, .footer-link
+
+        {
+            animation: none;
+        }
+
+        .auth-container::before {
+            animation: none;
+        }
+
+        .form-item:hover,
+        .btn-auth:hover,
+        .home-link-icon:hover,
+        .auth-link:hover {
+            transform: none;
+        }
+
+        }
+    </style>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\bin\Release\net8.0\Unitta.Domain.deps.json
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\bin\Release\net8.0\Unitta.Domain.dll
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\bin\Release\net8.0\Unitta.Domain.pdb
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Release\net8.0\Unitta.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Release\net8.0\Unitta.Domain.AssemblyInfoInputs.cache
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Release\net8.0\Unitta.Domain.AssemblyInfo.cs
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Release\net8.0\Unitta.Domain.csproj.CoreCompileInputs.cache
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Release\net8.0\Unitta.Domain.sourcelink.json
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Release\net8.0\Unitta.Domain.dll
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Release\net8.0\refint\Unitta.Domain.dll
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Release\net8.0\Unitta.Domain.pdb
+C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Release\net8.0\ref\Unitta.Domain.dll

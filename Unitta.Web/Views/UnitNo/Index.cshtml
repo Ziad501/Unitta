@@ -1,0 +1,95 @@
+﻿@model IEnumerable<UnitNoDto>
+@{
+    ViewData["Title"] = "Unit Numbers";
+}
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Unit Number</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete Unit Number: <strong id="unitNumberToDelete"></strong>?
+                <p class="text-danger mt-2">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" asp-controller="UnitNo" asp-action="Delete" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" id="unitNoIdToDelete" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="w-75 card container d-flex justify-content-center border-0 p-4">
+    <div class="card-body border p-4">
+        <div class="card-header bg-transparent border-bottom">
+            <div class="d-flex justify-content-center align-items-center">
+                <h3 class="mb-0">
+                    <i class="bi bi-card-list me-2"></i>Unit Numbers
+                </h3>
+            </div>
+        </div>
+        <div class="row pt-3">
+            <div class="col-6 offset-6 text-end">
+                <a class="btn btn-secondary" asp-controller="UnitNo" asp-action="Create"><i class="bi bi-plus-circle"></i> Create New Unit Number</a>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Unit Number</th>
+                    <th>Unit ID</th>
+                    <th>Special Details</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var unitNo in Model)
+                {
+                    <tr>
+                        <td>@unitNo.UnitNumber</td>
+                        <td>@unitNo.UnitId</td>
+                        <td>@unitNo.SpecialDetails</td>
+                        <td>
+                            <div class="w-100 btn-group" role="group">
+                                <a class="btn btn-primary mx-2" asp-controller="UnitNo" asp-action="Edit" asp-route-id="@unitNo.UnitNumber"><i class="bi bi-pencil-square"></i> Edit</a>
+                                <button type="button" class="btn btn-danger mx-2" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal" data-unit-no-id="@unitNo.UnitNumber" data-unit-number-to-display="@unitNo.UnitNumber">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_Notification" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var deleteModal = document.getElementById('deleteModal');
+            deleteModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                // Changed: Script now gets the number and updates the modal body text
+                var unitNoId = button.getAttribute('data-unit-no-id');
+                var unitNumberDisplay = button.getAttribute('data-unit-number-to-display');
+
+                var hiddenInput = document.getElementById('unitNoIdToDelete');
+                var numberPlaceholder = document.getElementById('unitNumberToDelete');
+
+                hiddenInput.value = unitNoId;
+                numberPlaceholder.textContent = unitNumberDisplay;
+            });
+        });
+    </script>
+}

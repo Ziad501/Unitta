@@ -1,0 +1,62 @@
+﻿@model HomeViewModel
+
+<div class="row g-4">
+    @if (Model.Units is not null && Model.Units.Any())
+    {
+        @foreach (var unit in Model.Units)
+        {
+            <div class="col-xl-4 col-lg-6 d-flex align-items-stretch">
+                <div class="card h-100 w-100 unit-card">
+                    <img src="@unit.ImageUrl" class="card-img-top unit-card-img" alt="@unit.Name">
+                    <div class="card-body d-flex flex-column">
+                        <h4 class="card-title fw-bold">@unit.Name</h4>
+                        <p class="card-text text-body-secondary">@unit.Description</p>
+                        <button type="button" class="btn btn-sm btn-outline-secondary mt-auto align-self-start" data-bs-toggle="modal" data-bs-target="#detailsModal-@(unit.Id)">
+                            View Details
+                        </button>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 pb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="price">@unit.Price.ToString("C0")</span>
+                                <span class="price-period">/ night</span>
+                            </div>
+                            @if (Model.CheckInDate >= DateOnly.FromDateTime(DateTime.Now))
+                            {
+                                @if (Model.AvailableUnitIds is not null && Model.AvailableUnitIds.Contains(unit.Id))
+                                {
+                                    <a asp-controller="Booking" asp-action="FinalizeBooking"
+                                       asp-route-unitId="@unit.Id" asp-route-checkInDate="@Model.CheckInDate"
+                                       asp-route-nights="@Model.NumberOfNights"
+                                       class="btn btn-success fw-bold">
+                                        Book Now
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="btn btn-outline-danger disabled">Sold Out</span>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="detailsModal-@(unit.Id)" tabindex="-1" aria-labelledby="detailsModalLabel-@(unit.Id)" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-body p-0">
+                            <partial name="_UnitDetail" model="@unit" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="text-center text-body-secondary">
+            <p>No units available for the selected criteria. Please try different dates.</p>
+        </div>
+    }
+</div>

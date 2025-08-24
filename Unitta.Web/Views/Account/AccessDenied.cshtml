@@ -1,0 +1,108 @@
+﻿@{
+    ViewData["Title"] = "Access Denied";
+    Layout = null; // Makes this a standalone page
+}
+
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+
+<body>
+
+    <div class="hero-section">
+        <div class="hero-overlay">
+
+            <div class="access-denied-container text-center">
+                <i class="bi bi-exclamation-triangle-fill display-1 text-warning mb-3"></i>
+                <h1 class="display-5 fw-bold">@ViewData["Title"]</h1>
+                <p class="lead text-white-50 mt-3">You do not have the necessary permissions to view this page or perform this action.</p>
+                <hr class="my-4 border-white-50">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-theme">
+                    <i class="bi bi-house-door-fill me-2"></i>Return to Home
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        :root {
+            /* Using the same theme colors from your other pages */
+            --theme-primary: #6366F1;
+            --theme-primary-light: #818CF8;
+            --theme-primary-rgb: 99, 102, 241;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            /* --- NEW BACKGROUND --- */
+            /* A solid dark color forms the base */
+            background-color: #0d1117;
+            /* A subtle radial gradient is layered on top to create a glow effect */
+            background-image: radial-gradient(circle farthest-corner at center, rgba(var(--theme-primary-rgb), 0.15) 0%, rgba(var(--theme-primary-rgb), 0) 50%);
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Overlay is now transparent as the background is handled by the parent */
+            background: transparent;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .access-denied-container {
+            max-width: 550px;
+            width: 100%;
+            padding: 3rem;
+            color: #fff;
+            background: rgba(23, 23, 33, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-theme {
+            background-image: linear-gradient(45deg, var(--theme-primary) 0%, var(--theme-primary-light) 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 1.05rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+            padding: 0.75rem 1.5rem;
+        }
+
+            .btn-theme:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(var(--theme-primary-rgb), 0.4);
+            }
+    </style>
+
+</body>
+</html>

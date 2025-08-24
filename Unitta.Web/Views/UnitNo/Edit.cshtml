@@ -1,0 +1,54 @@
+﻿@model UnitNoUpdateViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+
+<div class="container w-50 card border-0 p-4">
+    <div class="card-header ml-0 py-3">
+        <h2 class="text-center py-2"><i class="bi bi-pencil-square"></i> Edit Unit Number</h2>
+    </div>
+    <div class="card-body border p-4">
+        <form method="post" class="row">
+            @* Hidden input to hold the ID of the record we are editing *@
+            <input asp-for="UnitNo.UnitNumber" hidden />
+
+            <div class="form-floating py-2 col-12">
+                <input asp-for="UnitNo.UnitNumber" class="form-control border shadow" />
+                <label asp-for="UnitNo.UnitNumber" class="ms-2"></label>
+                <span asp-validation-for="UnitNo.UnitNumber" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating py-2 col-12">
+                @* The dropdown uses the populated UnitList from the ViewModel *@
+                <select asp-for="UnitNo.UnitId" asp-items="@Model.UnitList" class="form-select border shadow">
+                    <option disabled selected>--Select Unit Type--</option>
+                </select>
+                <label asp-for="UnitNo.UnitId" class="ms-2">Unit Type</label>
+                <span asp-validation-for="UnitNo.UnitId" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating py-2 col-12">
+                <input asp-for="UnitNo.SpecialDetails" class="form-control border shadow" />
+                <label asp-for="UnitNo.SpecialDetails" class="ms-2"></label>
+                <span asp-validation-for="UnitNo.SpecialDetails" class="text-danger"></span>
+            </div>
+
+            <div class="col-12 text-end py-2">
+                <button type="submit" class="btn btn-warning shadow">
+                    <i class="bi bi-check-circle"></i> Update
+                </button>
+                <a asp-controller="UnitNo" asp-action="Index" class="btn btn-secondary shadow">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_Notification" />
+}
+

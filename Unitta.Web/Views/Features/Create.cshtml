@@ -1,0 +1,51 @@
+﻿@model Unitta.Web.Models.FeatureCreateViewModel
+
+@{
+    ViewData["Title"] = "Create Feature";
+}
+
+<div class="w-50 card container border-0 p-4">
+    <div class="card-header ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="py-2"><i class="bi bi-plus-circle"></i> Create Feature</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body border p-4">
+        <form method="post" class="row">
+            <div class="form-floating py-2 col-12">
+                <input asp-for="Feature.Name" class="form-control border shadow" placeholder=" " />
+                <label asp-for="Feature.Name" class="ms-2"></label>
+                <span asp-validation-for="Feature.Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <textarea asp-for="Feature.Description" class="form-control border shadow" placeholder=" " style="height: 100px"></textarea>
+                <label asp-for="Feature.Description" class="ms-2"></label>
+                <span asp-validation-for="Feature.Description" class="text-danger"></span>
+            </div>
+            <div class="form-floating py-2 col-12">
+                <select asp-for="Feature.UnitId" class="form-select border shadow" asp-items="Model.UnitList">
+                    <option disabled selected>-- Select a Unit --</option>
+                </select>
+                <label asp-for="Feature.UnitId" class="ms-2">Unit</label>
+                <span asp-validation-for="Feature.UnitId" class="text-danger"></span>
+            </div>
+            <div class="col-12 text-end py-2">
+                <button type="submit" class="btn btn-success shadow">
+                    <i class="bi bi-file-plus"></i> Create
+                </button>
+                <a asp-action="Index" class="btn btn-secondary shadow">
+                    <i class="bi bi-x-circle"></i> Back to List
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+        <partial name="_Notification" />
+    }
+}

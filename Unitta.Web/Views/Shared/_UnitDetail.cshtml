@@ -1,0 +1,46 @@
+﻿@model UnitDto
+
+<div class="card border-0">
+    <div class="row g-0">
+        <div class="col-lg-7">
+            <img src="@Model.ImageUrl" class="img-fluid rounded-start" style="height:100%; object-fit:cover;" alt="@Model.Name">
+        </div>
+        <div class="col-lg-5 d-flex flex-column">
+            <div class="card-header bg-transparent border-0 text-end">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="card-body">
+                <h3 class="card-title display-6">@Model.Name</h3>
+                <p class="card-text text-body-secondary">@Model.Description</p>
+                <hr>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-cash-coin detail-icon me-3"></i>
+                    <div>
+                        <h6 class="mb-0 text-body-secondary">Price per Night</h6>
+                        <span class="fs-5 fw-bold">@Model.Price.ToString("C")</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-arrows-fullscreen detail-icon me-3"></i>
+                    <div>
+                        <h6 class="mb-0 text-body-secondary">Size</h6>
+                        <span class="fs-5 fw-bold">@Model.Sqft sqft</span>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-people-fill detail-icon me-3"></i>
+                    <div>
+                        <h6 class="mb-0 text-body-secondary">Max Occupancy</h6>
+                        <span class="fs-5 fw-bold">@Model.Occupancy adults</span>
+                    </div>
+                </div>
+            </div>
+            @* <div class="card-footer bg-transparent border-0 text-end py-3">
+                <a asp-controller="Home" asp-action="GeneratePPTExport"
+                   asp-route-id="@Model.Id" class="btn btn-outline-warning">
+                    <i class="bi bi-file-earmark-ppt"></i> Download Details
+                </a>
+            </div> *@
+        </div>
+    </div>
+</div>

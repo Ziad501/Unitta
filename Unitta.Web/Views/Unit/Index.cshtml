@@ -1,0 +1,102 @@
+﻿@model IEnumerable<UnitDto>
+@{
+    ViewData["Title"] = "Units";
+}
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Delete Unit</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the unit: <strong id="unitNameToDelete"></strong>?
+                <p class="text-danger mt-2">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <form id="deleteForm" asp-controller="Unit" asp-action="Delete" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="unitId" name="id" />
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="w-75 card container d-flex justify-content-center border-0 p-4">
+    <div class="card-header border p-4">
+        <div class="card-header bg-transparent border-bottom">
+            <div class="d-flex justify-content-center align-items-center">
+                <h3 class="mb-0">
+                    <i class="bi bi-card-list me-2"></i>Unit List
+                </h3>
+            </div>
+        </div>
+        <div class="row pt-3">
+            <div class="col-6 offset-6 text-end">
+                <a class="btn btn-secondary" asp-controller="Unit" asp-action="Create"><i class="bi bi-plus-circle"></i> Create New Unit</a>
+            </div>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Square Feet</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var unit in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(unit.ImageUrl))
+                            {
+                                <img src="@unit.ImageUrl" style="width:100px; border-radius: 5px; border: 1px solid #ddd" />
+                            }
+                        </td>
+                        <td>@unit.Name</td>
+                        <td>@unit.Price.ToString("c")</td>
+                        <td>@unit.Sqft</td>
+                        <td>
+                            <div class="w-100 btn-group" role="group">
+                                <a class="btn btn-primary mx-2" asp-controller="Unit" asp-action="Edit" asp-route-id="@unit.Id"><i class="bi bi-pencil-square"></i> Edit</a>
+                                <button type="button" class="btn btn-danger mx-2" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal" data-unit-id="@unit.Id" data-unit-name="@unit.Name">
+                                    <i class="bi bi-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <partial name="_Notification" />
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var deleteModal = document.getElementById('deleteModal');
+            deleteModal.addEventListener('show.bs.modal', function (event) {
+                var button = event.relatedTarget;
+                // Changed: Get both id and name from the button's data attributes
+                var unitId = button.getAttribute('data-unit-id');
+                var unitName = button.getAttribute('data-unit-name');
+
+                var hiddenInput = document.getElementById('unitId');
+                var namePlaceholder = document.getElementById('unitNameToDelete');
+
+                hiddenInput.value = unitId;
+                namePlaceholder.textContent = unitName;
+            });
+        });
+    </script>
+}
