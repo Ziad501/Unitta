@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Unitta.Application.DTOs;
 using Unitta.Application.Interfaces;
 using Unitta.Application.Utility;
 using Unitta.Infrastructure.Identity;
+using Unitta.Web.Extensions;
 using Unitta.Web.Models;
 
 namespace Unitta.Web.Controllers;
@@ -15,7 +17,10 @@ public class AccountController(
     SignInManager<ApplicationUser> _signInManager,
     RoleManager<IdentityRole> _roleManager,
     ILogger<AccountController> _logger,
-    IEmailSender _emailSender) : Controller
+    IEmailSender _emailSender,
+    IValidator<RegisterDto> _registerValidator,
+    IValidator<LoginDto> _loginValidator,
+    IValidator<ForgotPasswordDto> _forgotPasswordValidator) : Controller
 {
     public IActionResult Login(string returnUrl = null)
     {
@@ -36,6 +41,9 @@ public class AccountController(
     [HttpPost]
     public async Task<IActionResult> Login(LoginDto loginDto)
     {
+        var validation = await _loginValidator.ValidateAsync(loginDto);
+        validation.AddToModelState(ModelState);
+
         _logger.LogInformation("Login attempt started for email: {Email}", loginDto.Email);
         if (ModelState.IsValid)
         {
@@ -102,6 +110,9 @@ public class AccountController(
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel viewModel)
     {
+        var validation = await _registerValidator.ValidateAsync(viewModel.RegisterDto);
+        validation.AddToModelState(ModelState, nameof(viewModel.RegisterDto));
+
         _logger.LogInformation("Registration attempt started for email: {Email}", viewModel.RegisterDto.Email);
         if (ModelState.IsValid)
         {
@@ -122,7 +133,6 @@ public class AccountController(
                 _logger.LogInformation("Assigning role '{Role}' to user {Email}.", roleToAssign, user.Email);
                 await _userManager.AddToRoleAsync(user, roleToAssign);
 
-                // ADDED: Send welcome email to new user
                 try
                 {
                     var subject = "Welcome to Unitta!";
@@ -170,5 +180,126 @@ public class AccountController(
     {
         _logger.LogWarning("Access denied page accessed.");
         return View();
+    }
+    [HttpGet]
+    public IActionResult ForgotPassword()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ForgotPassword(ForgotPasswordDto model)
+    {
+        var validationResult = await _forgotPasswordValidator.ValidateAsync(model);
+        if (!validationResult.IsValid)
+        {
+            foreach (var error in validationResult.Errors)
+            {
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            }
+            return View(model);
+        }
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            // Don't reveal that the user does not exist.
+            _logger.LogWarning("Password reset requested for non-existent email: {Email}", model.Email);
+            return RedirectToAction("ResetPassword", new { email = model.Email });
+        }
+
+        // Rate Limiting: 1 minute cooldown
+        if (user.PasswordResetCodeSentAt.HasValue && user.PasswordResetCodeSentAt.Value.AddMinutes(1) > DateTime.UtcNow)
+        {
+            ModelState.AddModelError(string.Empty, "A reset code has been sent recently. Please wait a minute before trying again.");
+            return View(model);
+        }
+
+        // Generate a 6-digit code
+        var code = new Random().Next(100000, 999999).ToString("D6");
+
+        // Hash the code for secure storage
+        var hashedCode = _userManager.PasswordHasher.HashPassword(user, code);
+
+        // Update the user record
+        user.PasswordResetCodeHash = hashedCode;
+        user.PasswordResetCodeSentAt = DateTime.UtcNow;
+        await _userManager.UpdateAsync(user);
+
+        // Send the email with the RAW (unhashed) code
+        await _emailSender.SendEmailAsync(model.Email, "Your Password Reset Code", $"Your password reset code is: {code}. It will expire in 30 minutes.");
+
+        _logger.LogInformation("Password reset code sent to {Email}", model.Email);
+
+        // Immediately redirect to the ResetPassword page
+        return RedirectToAction("ResetPassword", new { email = model.Email });
+    }
+
+
+    [HttpGet]
+    public IActionResult ResetPassword(string email)
+    {
+        var model = new ResetPasswordDto { Email = email };
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ResetPassword(ResetPasswordDto model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        var user = await _userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            ModelState.AddModelError(string.Empty, "An error occurred. Please try the forgot password process again.");
+            return View(model);
+        }
+
+        // Check for code expiration (30 minutes)
+        if (user.PasswordResetCodeSentAt == null || user.PasswordResetCodeSentAt.Value.AddMinutes(30) < DateTime.UtcNow)
+        {
+            ModelState.AddModelError(nameof(model.Code), "The reset code has expired. Please request a new one.");
+            return View(model);
+        }
+
+        // Verify the hashed code
+        var result = _userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordResetCodeHash, model.Code);
+        if (result == PasswordVerificationResult.Failed)
+        {
+            ModelState.AddModelError(nameof(model.Code), "The reset code is invalid.");
+            return View(model);
+        }
+
+        // The code is valid, now perform the password reset
+        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+        var resetResult = await _userManager.ResetPasswordAsync(user, token, model.Password);
+
+        if (resetResult.Succeeded)
+        {
+            // Clear the reset code fields after a successful reset
+            user.PasswordResetCodeHash = null;
+            user.PasswordResetCodeSentAt = null;
+            await _userManager.UpdateAsync(user);
+
+            _logger.LogInformation("Password successfully reset for user with email: {Email}", model.Email);
+            TempData["SuccessMessage"] = "Your password has been reset. You can now log in.";
+            return RedirectToAction(nameof(Login));
+        }
+
+        // If something went wrong with Identity's reset
+        foreach (var error in resetResult.Errors)
+        {
+            ModelState.AddModelError(string.Empty, error.Description);
+        }
+        return View(model);
     }
 }

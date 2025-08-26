@@ -1,4 +1,3 @@
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Stripe;
 using Unitta.Application;
@@ -8,7 +7,7 @@ using Unitta.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-builder.Services.AddFluentValidationAutoValidation();
+
 builder.Services.AddInfrastructureServices(builder.Configuration).AddApplicationServices();
 builder.Services.ConfigureApplicationCookie(options =>
 {

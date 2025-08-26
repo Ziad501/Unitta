@@ -60,17 +60,17 @@
                     </div>
 
                     <div class="form-floating mb-3 form-item">
-                        <input asp-for="RegisterDto.Password" type="password" class="form-control" placeholder="Password" autocomplete="new-password" />
+                        <input asp-for="RegisterDto.Password" type="password" class="form-control" placeholder="Password" autocomplete="new-password" id="password-field" />
+                        <i class="bi bi-eye-slash toggle-password-icon" id="toggle-password"></i>
                         <label asp-for="RegisterDto.Password">Password</label>
                         <span asp-validation-for="RegisterDto.Password" class="text-white"></span>
                     </div>
-
                     <div class="form-floating mb-3 form-item">
-                        <input asp-for="RegisterDto.ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" autocomplete="new-password" />
+                        <input asp-for="RegisterDto.ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" autocomplete="new-password" id="confirm-password-field" />
+                        <i class="bi bi-eye-slash toggle-password-icon" id="toggle-confirm-password"></i>
                         <label asp-for="RegisterDto.ConfirmPassword">Confirm Password</label>
                         <span asp-validation-for="RegisterDto.ConfirmPassword" class="text-white"></span>
                     </div>
-
                     <button type="submit" class="btn btn-auth w-100 py-2 mt-4">
                         <span class="btn-text">Create Account</span>
                         <i class="bi bi-arrow-right-circle ms-2 btn-icon"></i>
@@ -87,6 +87,31 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Reusable function to set up a password toggle
+            function setupPasswordToggle(toggleId, passwordId) {
+                const toggle = document.getElementById(toggleId);
+                const password = document.getElementById(passwordId);
+
+                if (toggle && password) {
+                    toggle.addEventListener('click', function () {
+                        // Toggle the type attribute of the password field
+                        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                        password.setAttribute('type', type);
+
+                        // Toggle the icon class
+                        this.classList.toggle('bi-eye');
+                        this.classList.toggle('bi-eye-slash');
+                    });
+                }
+            }
+
+            // Set up for both password fields
+            setupPasswordToggle('toggle-password', 'password-field');
+            setupPasswordToggle('toggle-confirm-password', 'confirm-password-field');
+        });
+    </script>
     <style>
         :root {
             --theme-primary: #6366F1;
@@ -94,6 +119,7 @@
             --theme-primary-rgb: 99, 102, 241;
         }
 
+        /* Your existing CSS... */
         * {
             box-sizing: border-box;
         }
@@ -104,14 +130,37 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* START: New CSS for password toggle icon */
+        .form-item {
+            position: relative; /* This is required for the icon positioning */
+        }
+
+        .toggle-password-icon {
+            position: absolute;
+            top: 50%;
+            right: 1rem;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 2; /* Ensures it's above the input field */
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.3s ease;
+        }
+
+            .toggle-password-icon:hover {
+                color: rgba(255, 255, 255, 0.9);
+            }
+        /* END: New CSS */
+
         .hero-section {
             position: relative;
             height: 100vh;
             width: 100%;
-            background-image: url('/images/login/1.jpg');
+            background-image: url('/images/1.webp');
             background-size: cover;
             background-position: center;
         }
+
+        /* ... The rest of your CSS remains unchanged ... */
 
         .hero-overlay {
             position: absolute;
@@ -147,20 +196,17 @@
 
         /* Card entrance animation */
         @@keyframes slideInUp {
-            0%
+            0% {
+                opacity: 0;
+                transform: translateY(60px) scale(0.95);
+                filter: blur(4px);
+            }
 
-        {
-            opacity: 0;
-            transform: translateY(60px) scale(0.95);
-            filter: blur(4px);
-        }
-
-        100% {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0);
-        }
-
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
         }
 
         /* Floating animation for subtle movement */
@@ -179,20 +225,17 @@
         }
 
         @@keyframes borderGlow {
-            0%
+            0% {
+                opacity: 0;
+            }
 
-        {
-            opacity: 0;
-        }
+            50% {
+                opacity: 0.3;
+            }
 
-        50% {
-            opacity: 0.3;
-        }
-
-        100% {
-            opacity: 0;
-        }
-
+            100% {
+                opacity: 0;
+            }
         }
 
         .home-link-icon {
@@ -256,70 +299,58 @@
             }
 
         @@keyframes fadeInUp {
-            0%
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-        {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @@keyframes fadeInDown {
-            0%
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
 
-        {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @@keyframes fadeIn {
-            0%
+            0% {
+                opacity: 0;
+            }
 
-        {
-            opacity: 0;
-        }
-
-        100% {
-            opacity: 1;
-        }
-
+            100% {
+                opacity: 1;
+            }
         }
 
         @@keyframes bounceIn {
-            0%
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
 
-        {
-            opacity: 0;
-            transform: scale(0.3);
-        }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
 
-        50% {
-            opacity: 1;
-            transform: scale(1.05);
-        }
+            70% {
+                transform: scale(0.9);
+            }
 
-        70% {
-            transform: scale(0.9);
-        }
-
-        100% {
-            opacity: 1;
-            transform: scale(1);
-        }
-
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .form-item:hover {
@@ -450,38 +481,32 @@
 
         /* Responsive animations */
         @@media (max-width: 576px) {
-            .auth-container
+            .auth-container {
+                animation: fadeIn 0.6s ease;
+                padding: 2rem 1.5rem;
+            }
 
-        {
-            animation: fadeIn 0.6s ease;
-            padding: 2rem 1.5rem;
-        }
-
-        .form-item:hover {
-            transform: none;
-        }
-
+            .form-item:hover {
+                transform: none;
+            }
         }
 
         /* Accessibility - respect reduced motion preference */
         @@media (prefers-reduced-motion: reduce) {
-            .auth-container, .home-link-icon, .auth-header, .form-item, .btn-auth, .footer-link
+            .auth-container, .home-link-icon, .auth-header, .form-item, .btn-auth, .footer-link {
+                animation: none;
+            }
 
-        {
-            animation: none;
-        }
+                .auth-container::before {
+                    animation: none;
+                }
 
-        .auth-container::before {
-            animation: none;
-        }
-
-        .form-item:hover,
-        .btn-auth:hover,
-        .home-link-icon:hover,
-        .auth-link:hover {
-            transform: none;
-        }
-
+                .form-item:hover,
+                .btn-auth:hover,
+                .home-link-icon:hover,
+                .auth-link:hover {
+                    transform: none;
+                }
         }
     </style>
 

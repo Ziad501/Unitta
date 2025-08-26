@@ -11,12 +11,13 @@ public class RegisterDtoValidator : AbstractValidator<RegisterDto>
             .NotEmpty().WithMessage("Name is required.");
 
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email address is required.")
-            .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")
-            .EmailAddress().WithMessage("A valid email address is required.");
+        .NotEmpty().WithMessage("Email address is required.")
+        .EmailAddress()
+        .WithMessage("A valid email address is required.");
 
         RuleFor(x => x.PhoneNumber)
-            .NotEmpty().WithMessage("Phone number is required.");
+            .NotEmpty().WithMessage("Phone number is required.")
+            .WithName("Phone number");
 
         RuleFor(x => x.Role)
             .NotEmpty().WithMessage("Please select a role.");
@@ -28,6 +29,7 @@ public class RegisterDtoValidator : AbstractValidator<RegisterDto>
 
         RuleFor(x => x.ConfirmPassword)
             .NotEmpty().WithMessage("Password confirmation is required.")
-            .Equal(x => x.Password).WithMessage("The passwords do not match.");
+            .Equal(x => x.Password).WithMessage("The passwords do not match.")
+            .WithName("Confirm password");
     }
 }

@@ -22,3 +22,15 @@ C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Debug\net8.0\Unitta.Dom
 C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Debug\net8.0\refint\Unitta.Domain.dll
 C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Debug\net8.0\Unitta.Domain.pdb
 C:\Users\ziadm\OneDrive\Desktop\Unitta\Unitta.Domain\obj\Debug\net8.0\ref\Unitta.Domain.dll
+D:\Unitta\Unitta.Domain\bin\Debug\net8.0\Unitta.Domain.deps.json
+D:\Unitta\Unitta.Domain\bin\Debug\net8.0\Unitta.Domain.dll
+D:\Unitta\Unitta.Domain\bin\Debug\net8.0\Unitta.Domain.pdb
+D:\Unitta\Unitta.Domain\obj\Debug\net8.0\Unitta.Domain.GeneratedMSBuildEditorConfig.editorconfig
+D:\Unitta\Unitta.Domain\obj\Debug\net8.0\Unitta.Domain.AssemblyInfoInputs.cache
+D:\Unitta\Unitta.Domain\obj\Debug\net8.0\Unitta.Domain.AssemblyInfo.cs
+D:\Unitta\Unitta.Domain\obj\Debug\net8.0\Unitta.Domain.csproj.CoreCompileInputs.cache
+D:\Unitta\Unitta.Domain\obj\Debug\net8.0\Unitta.Domain.sourcelink.json
+D:\Unitta\Unitta.Domain\obj\Debug\net8.0\Unitta.Domain.dll
+D:\Unitta\Unitta.Domain\obj\Debug\net8.0\refint\Unitta.Domain.dll
+D:\Unitta\Unitta.Domain\obj\Debug\net8.0\Unitta.Domain.pdb
+D:\Unitta\Unitta.Domain\obj\Debug\net8.0\ref\Unitta.Domain.dll

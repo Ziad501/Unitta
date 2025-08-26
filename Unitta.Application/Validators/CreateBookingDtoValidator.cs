@@ -29,14 +29,17 @@ public class CreateBookingDtoValidator : AbstractValidator<CreateBookingDto>
 
         RuleFor(b => b.CheckInDate)
             .NotEmpty().WithMessage("Check-in date is required.")
-            .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today)).WithMessage("Check-in date cannot be in the past.");
+            .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today)).WithMessage("Check-in date cannot be in the past.")
+            .WithName("Check-in date");
 
         RuleFor(b => b.UnitNumber)
             .NotEmpty().WithMessage("Unit number is required.")
-            .GreaterThan(0).WithMessage("Unit number must be a positive number.");
+            .GreaterThan(0).WithMessage("Unit number must be a positive number.")
+            .WithName("Unit number");
         RuleFor(booking => booking)
             .MustAsync(BeAvailable)
-            .WithMessage("This unit is not available for the selected dates. Please choose different dates.");
+            .WithMessage("This unit is not available for the selected dates. Please choose different dates.")
+            .WithName("Unit availability");
     }
     private async Task<bool> BeAvailable(CreateBookingDto booking, CancellationToken cancellationToken)
     {

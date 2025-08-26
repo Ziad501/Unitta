@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Unitta.Application.DTOs;
 using Unitta.Application.Interfaces;
 using Unitta.Application.Mappers;
 using Unitta.Application.Utility;
@@ -8,10 +11,14 @@ using Unitta.Domain.Entities;
 using Unitta.Web.Models;
 
 namespace Unitta.Web.Controllers;
-public class FeaturesController(IFeatureRepository _featureRepository,
-                                IUnitRepository _unitRepository,
-                                ILogger<FeaturesController> _logger) : Controller
+public class FeaturesController(
+    IFeatureRepository _featureRepository,
+    IUnitRepository _unitRepository,
+    ILogger<FeaturesController> _logger,
+    IValidator<FeatureCreateDto> _createValidator,
+    IValidator<FeatureUpdateDto> _updateValidator) : Controller
 {
+    [HttpGet]
     [Authorize(Roles = SD.Role_Admin + "," + SD.Role_AdminView)]
     public async Task<IActionResult> Index()
     {
@@ -37,9 +44,11 @@ public class FeaturesController(IFeatureRepository _featureRepository,
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = SD.Role_Admin)]
-
     public async Task<IActionResult> Create(FeatureCreateViewModel viewModel)
     {
+        var validationResult = await _createValidator.ValidateAsync(viewModel.Feature);
+        validationResult.AddToModelState(ModelState, nameof(viewModel.Feature));
+
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Model state is invalid for creating a new feature.");
@@ -80,9 +89,10 @@ public class FeaturesController(IFeatureRepository _featureRepository,
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = SD.Role_Admin)]
-
     public async Task<IActionResult> Edit(int id, FeatureEditViewModel viewModel)
     {
+        var validationResult = await _updateValidator.ValidateAsync(viewModel.Feature);
+        validationResult.AddToModelState(ModelState, nameof(viewModel.Feature));
         if (id != viewModel.Feature.Id)
         {
             return BadRequest();

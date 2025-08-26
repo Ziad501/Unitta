@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "t9jf9fnFHVU=",
+  "dgSpecHash": "e47kLdAOdtQ=",
   "success": true,
   "projectFilePath": "D:\\Unitta\\Unitta.Application\\Unitta.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ziadm\\.nuget\\packages\\fluentvalidation\\12.0.0\\fluentvalidation.12.0.0.nupkg.sha512",
+    "C:\\Users\\ziadm\\.nuget\\packages\\fluentvalidation.aspnetcore\\11.3.1\\fluentvalidation.aspnetcore.11.3.1.nupkg.sha512",
     "C:\\Users\\ziadm\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\12.0.0\\fluentvalidation.dependencyinjectionextensions.12.0.0.nupkg.sha512",
     "C:\\Users\\ziadm\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.3.0\\microsoft.aspnetcore.http.features.2.3.0.nupkg.sha512",
     "C:\\Users\\ziadm\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\2.1.0\\microsoft.extensions.dependencyinjection.abstractions.2.1.0.nupkg.sha512",

@@ -12,7 +12,11 @@ using Unitta.Domain.Entities;
 
 namespace Unitta.Web.Controllers;
 
-public class BookingController(IBookingRepository _repo, IUnitRepository _unit, IUserService _userService, IEmailSender _emailSender, ILogger<BookingController> _logger) : Controller
+public class BookingController(IBookingRepository _repo,
+    IUnitRepository _unit,
+    IUserService _userService,
+    IEmailSender _emailSender,
+    ILogger<BookingController> _logger) : Controller
 {
     [Authorize]
     public IActionResult Index()

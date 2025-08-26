@@ -11,7 +11,8 @@ public class UnitNoUpdateDtoValidator : AbstractValidator<UnitNoUpdateDto>
             .NotEmpty()
             .WithMessage("Unit number is required.")
             .GreaterThan(0)
-            .WithMessage("Unit number must be greater than zero.");
+            .WithMessage("Unit number must be greater than zero.")
+            .WithName("Unit number");
         RuleFor(x => x.UnitId)
             .NotEmpty()
             .WithMessage("Unit ID is required.")
@@ -19,6 +20,7 @@ public class UnitNoUpdateDtoValidator : AbstractValidator<UnitNoUpdateDto>
             .WithMessage("Unit ID must be greater than zero.");
         RuleFor(x => x.SpecialDetails)
             .MaximumLength(500)
-            .WithMessage("Special details cannot exceed 500 characters.");
+            .WithMessage("Special details cannot exceed 500 characters.")
+            .WithName("Special details");
     }
 }

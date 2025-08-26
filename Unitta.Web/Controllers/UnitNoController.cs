@@ -1,14 +1,21 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Unitta.Application.DTOs;
 using Unitta.Application.Interfaces;
 using Unitta.Application.Mappers;
 using Unitta.Application.Utility;
 using Unitta.Web.Models;
 
 namespace Unitta.Web.Controllers;
-public class UnitNoController(IUnitNoRepository _repo,
-    IUnitRepository unitRepo, ILogger<UnitNoController> _logger) : Controller
+public class UnitNoController(
+    IUnitNoRepository _repo,
+    IUnitRepository unitRepo,
+    ILogger<UnitNoController> _logger,
+    IValidator<UnitNoCreateDto> _createValidator,
+    IValidator<UnitNoUpdateDto> _updateValidator) : Controller
 {
     [Authorize(Roles = SD.Role_Admin + "," + SD.Role_AdminView)]
     public async Task<IActionResult> Index()
@@ -20,7 +27,6 @@ public class UnitNoController(IUnitNoRepository _repo,
     }
     [HttpGet]
     [Authorize(Roles = SD.Role_Admin)]
-
     public async Task<IActionResult> Create()
     {
         _logger.LogInformation("Rendering the Create Unit Number view.");
@@ -31,9 +37,10 @@ public class UnitNoController(IUnitNoRepository _repo,
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = SD.Role_Admin)]
-
     public async Task<IActionResult> Create(UnitNoCreateViewModel viewModel)
     {
+        var validationResult = await _createValidator.ValidateAsync(viewModel.UnitNo);
+        validationResult.AddToModelState(ModelState, nameof(viewModel.UnitNo));
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Validation failed when creating a unit number.");
@@ -72,9 +79,10 @@ public class UnitNoController(IUnitNoRepository _repo,
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = SD.Role_Admin)]
-
     public async Task<IActionResult> Edit(UnitNoUpdateViewModel viewmodel)
     {
+        var validationResult = await _updateValidator.ValidateAsync(viewmodel.UnitNo);
+        validationResult.AddToModelState(ModelState, nameof(viewmodel.UnitNo));
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Model state is invalid for unit number update.");

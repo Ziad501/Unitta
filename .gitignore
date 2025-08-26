@@ -1,0 +1,27 @@
+ 
+# Visual Studio user-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio cache/options
+.vs/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# Rider files
+.idea/
+*.sln.iml
+
+# User-uploaded files (as requested)
+# WARNING: Only use this if the 'images' folder contains user-uploaded content
+# that should NOT be in source control. If it contains your site's theme images,
+# you should REMOVE this line.
+images/
+
+# Other
+*.DS_Store
+*.swp

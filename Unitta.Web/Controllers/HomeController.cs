@@ -5,7 +5,9 @@ using Unitta.Web.Models;
 
 namespace Unitta.Web.Controllers;
 
-public class HomeController(IUnitRepository _repo, ILogger<HomeController> _logger) : Controller
+public class HomeController(
+    IUnitRepository _repo,
+    ILogger<HomeController> _logger) : Controller
 {
     public async Task<IActionResult> Index()
     {
@@ -46,12 +48,6 @@ public class HomeController(IUnitRepository _repo, ILogger<HomeController> _logg
         };
 
         return PartialView("_UnitList", homeViewModel);
-    }
-
-    public IActionResult GeneratePPTExport(int id)
-    {
-        TempData["SuccessMessage"] = $"PPT export requested for Unit ID: {id}. (This is a demo).";
-        return RedirectToAction(nameof(Index));
     }
 
     public IActionResult Error()

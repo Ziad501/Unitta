@@ -14,7 +14,8 @@ public class UnitNoCreateDtoValidator : AbstractValidator<UnitNoCreateDto>
         RuleFor(x => x.UnitNumber)
             .NotEmpty().WithMessage("Unit number is required.")
             .MustAsync(BeAUniqueNumber)
-            .WithMessage("This Unit Number already exists. Please choose another.");
+            .WithMessage("This Unit Number already exists. Please choose another.")
+            .WithName("Unit number");
 
         RuleFor(x => x.UnitId)
             .NotEmpty().WithMessage("You must select a Unit.")
@@ -24,7 +25,8 @@ public class UnitNoCreateDtoValidator : AbstractValidator<UnitNoCreateDto>
 
         RuleFor(x => x.SpecialDetails)
             .MaximumLength(500)
-            .WithMessage("Special details cannot exceed 500 characters.");
+            .WithMessage("Special details cannot exceed 500 characters.")
+            .WithName("Special details");
     }
 
     private async Task<bool> BeAnUnassignedUnit(int unitId, CancellationToken cancellationToken)

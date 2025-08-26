@@ -42,13 +42,13 @@
 
     <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-inner">
-            <div class="carousel-item active"><img src="~/images/1.png" class="d-block w-100" alt="Slide 1"></div>
-            <div class="carousel-item"><img src="~/images/2.jpg" class="d-block w-100" alt="Slide 2"></div>
-            <div class="carousel-item"><img src="~/images/3.jpg" class="d-block w-100" alt="Slide 3"></div>
-            <div class="carousel-item"><img src="~/images/4.jpg" class="d-block w-100" alt="Slide 4"></div>
-            <div class="carousel-item"><img src="~/images/5.jpg" class="d-block w-100" alt="Slide 5"></div>
-            <div class="carousel-item"><img src="~/images/6.jpg" class="d-block w-100" alt="Slide 6"></div>
-            <div class="carousel-item"><img src="~/images/7.jpg" class="d-block w-100" alt="Slide 7"></div>
+            <div class="carousel-item active"><img src="~/images/1.webp" class="d-block w-100" alt="Luxurious hotel suite with a king-sized bed and city view"></div>
+            <div class="carousel-item"><img src="~/images/2.webp" class="d-block w-100" alt="Serene infinity pool overlooking the ocean at sunset"></div>
+            <div class="carousel-item"><img src="~/images/3.webp" class="d-block w-100" alt="Elegant hotel lobby with modern decor and comfortable seating"></div>
+            <div class="carousel-item"><img src="~/images/4.webp" class="d-block w-100" alt="Couple enjoying a gourmet meal on a private balcony"></div>
+            <div class="carousel-item"><img src="~/images/5.webp" class="d-block w-100" alt="Relaxing spa room with massage tables and soft lighting"></div>
+            <div class="carousel-item"><img src="~/images/6.webp" class="d-block w-100" alt="Pristine white sand beach with turquoise water and palm trees"></div>
+            <div class="carousel-item"><img src="~/images/7.webp" class="d-block w-100" alt="Modern hotel exterior illuminated at night"></div>
         </div>
     </div>
 </div>
@@ -66,13 +66,13 @@
 
 @section scripts {
     <partial name="_Notification" />
+    <partial name="_ValidationScriptsPartial" />
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Initialize Flatpickr for a single date selection
-            flatpickr("#CheckInDate", {
-                dateFormat: "Y-m-d",
-                minDate: "today"
-
+        $(document).ready(function () {
+           
+            $("#CheckInDate").datepicker({
+                dateFormat: "yy-mm-dd", 
+                minDate: 0 
             });
         });
 
@@ -85,17 +85,15 @@
                 return;
             }
 
-             const btn = document.getElementById('checkAvailabilityBtn');
+            const btn = document.getElementById('checkAvailabilityBtn');
             const btnIcon = btn.querySelector('.btn-icon');
             const btnText = btn.querySelector('.btn-text');
             const spinner = btn.querySelector('.spinner-border');
 
-            // Disable button and show spinner
             btn.disabled = true;
             btnIcon.classList.add('d-none');
             btnText.classList.add('d-none');
             spinner.classList.remove('d-none');
-            // --- Spinner Logic Ends ---
 
             var objData = {
                 checkInDate: checkInDateStr,
@@ -114,13 +112,12 @@
                     alert("An error occurred: " + response.responseText);
                 },
                 complete: function () {
-                    // --- Spinner Logic Starts ---
-                    // This always runs after success or error to reset the button
+                    
                     btn.disabled = false;
                     spinner.classList.add('d-none');
                     btnIcon.classList.remove('d-none');
                     btnText.classList.remove('d-none');
-                    // --- Spinner Logic Ends ---
+                    
                 }
             });
         }

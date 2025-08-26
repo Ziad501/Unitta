@@ -8,16 +8,18 @@ namespace Unitta.Web.Controllers;
 [Authorize(Roles = SD.Role_Admin + "," + SD.Role_AdminView)]
 public class DashboardController(IBookingRepository _booking, IUserService _userService, ILogger<DashboardController> _logger) : Controller
 {
+    [HttpGet]
     public IActionResult Index()
     {
+        _logger.LogInformation("Dashboard Index accessed by user {User}", User.Identity?.Name ?? "Unknown");
         ViewBag.IsAdminView = User.IsInRole(SD.Role_AdminView);
         return View();
     }
 
+    [HttpGet]
     public async Task<IActionResult> GetTotalBooking()
     {
         _logger.LogInformation("GetTotalBooking called");
-
         try
         {
             var today = DateTime.Today;
@@ -68,6 +70,7 @@ public class DashboardController(IBookingRepository _booking, IUserService _user
         }
     }
 
+    [HttpGet]
     public async Task<IActionResult> GetTotalUsers()
     {
         _logger.LogInformation("GetTotalUsers called");
@@ -101,7 +104,7 @@ public class DashboardController(IBookingRepository _booking, IUserService _user
             return Json(CreateRadialBarChartViewModel(0, 0, 0));
         }
     }
-
+    [HttpGet]
     public async Task<IActionResult> GetTotalRevenue()
     {
         _logger.LogInformation("GetTotalRevenue called");
@@ -139,6 +142,7 @@ public class DashboardController(IBookingRepository _booking, IUserService _user
         }
     }
 
+    [HttpGet]
     public async Task<IActionResult> GetBookingPieChart()
     {
         _logger.LogInformation("GetBookingPieChart called");
@@ -196,6 +200,7 @@ public class DashboardController(IBookingRepository _booking, IUserService _user
         return Json(pieChartViewModel);
 
     }
+    [HttpGet]
     public async Task<IActionResult> GetMemberAndBookingPieChart()
     {
         _logger.LogInformation("GetMemberAndBookingPieChart called");

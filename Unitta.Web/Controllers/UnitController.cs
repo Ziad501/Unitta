@@ -1,17 +1,20 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Unitta.Application.DTOs;
 using Unitta.Application.Interfaces;
 using Unitta.Application.Mappers;
 using Unitta.Application.Utility;
+using Unitta.Web.Extensions;
 
 namespace Unitta.Web.Controllers;
-
 [Authorize(Roles = SD.Role_Admin + "," + SD.Role_AdminView)]
 public class UnitController(
     IUnitRepository _unit,
     ILogger<UnitController> _logger,
-    IWebHostEnvironment _hostEnvironment) : Controller
+    IWebHostEnvironment _hostEnvironment,
+    IValidator<UnitCreateDto> _createValidator,
+    IValidator<UnitUpdateDto> _updateValidator) : Controller
 {
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -34,6 +37,16 @@ public class UnitController(
     [Authorize(Roles = SD.Role_Admin)]
     public async Task<IActionResult> Create(UnitCreateDto unitDto)
     {
+        /*
+        If your action takes the DTO directly (e.g., 
+        public IActionResult Action(MyDto dto)), 
+        do not use a prefix: result.AddToModelState(ModelState);
+
+        If your action takes a ViewModel that contains the DTO 
+        (e.g., public IActionResult Action(MyViewModel vm) where vm has a property public MyDto Dto { get; set; }), 
+        you must use the prefix:result.AddToModelState(ModelState, nameof(vm.Dto));*/
+        var validationResult = await _createValidator.ValidateAsync(unitDto);
+        validationResult.AddToModelState(ModelState);
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Create validation failed for unit with name: {UnitName}", unitDto.Name);
@@ -88,10 +101,12 @@ public class UnitController(
     [Authorize(Roles = SD.Role_Admin)]
     public async Task<IActionResult> Edit(UnitUpdateDto dto)
     {
+        var validationResult = await _updateValidator.ValidateAsync(dto);
+        validationResult.AddToModelState(ModelState);
+
         if (!ModelState.IsValid)
         {
             _logger.LogWarning("Update validation failed for unit with ID {UnitId}.", dto.Id);
-            // If validation fails, we must reload the CurrentImageUrl for the view
             dto.CurrentImageUrl = (await _unit.GetByIdAsync(dto.Id))?.ImageUrl;
             return View(dto);
         }
@@ -107,10 +122,8 @@ public class UnitController(
         }
         UnitMapper.UpdateUnitFromDto(dto, unitToUpdate);
 
-        // 1. Handle the new image upload, if one exists
         if (dto.NewImage != null)
         {
-            // (Optional but recommended) Delete the old image file
             if (!string.IsNullOrEmpty(unitToUpdate.ImageUrl))
             {
                 var oldImagePath = Path.Combine(_hostEnvironment.WebRootPath, unitToUpdate.ImageUrl.TrimStart('/'));
@@ -120,7 +133,6 @@ public class UnitController(
                 }
             }
 
-            // Save the new image file
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.NewImage.FileName);
             string imagePath = Path.Combine(_hostEnvironment.WebRootPath, @"images/units");
 
@@ -129,12 +141,10 @@ public class UnitController(
                 await dto.NewImage.CopyToAsync(fileStream);
             }
 
-            // Update the ImageUrl on the entity
             unitToUpdate.ImageUrl = @"/images/units/" + fileName;
         }
         unitToUpdate.UpdatedDate = DateTime.UtcNow;
 
-        // 3. Save the changes to the database
         await _unit.UpdateAsync(unitToUpdate);
         TempData["SuccessMessage"] = $"Unit '{unitToUpdate.Name}' updated successfully.";
         _logger.LogInformation("Unit with ID {UnitId} updated successfully.", dto.Id);
